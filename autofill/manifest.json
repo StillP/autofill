@@ -1,0 +1,16 @@
+{
+    "name":"autofill",
+    "description":"文件导入自动填充数据插件",
+    "version":"0.0.1",
+    "manifest_version":2,
+    "browser_action":{
+        "default_popup":"./html/popup.html",
+        "default_icon":"./icon/icon.png"
+    },
+    "content_scripts":[{
+        "matches":["<all_urls>"],
+        "js":["page.js"],
+        "run_at":["document_end"]
+    }],
+    "permission":["tabs","activeTab"]
+}
