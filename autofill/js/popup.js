@@ -1,23 +1,63 @@
 document.addEventListener("DOMContentLoaded",function(){
-    //页面打开时获取iframe的层级结构并填充
-    var level = document.getElementById("level");
-    var result = document.getElementById("result");
-    var levelObject = send("init","","");
+    window.onload = send("init","");
 });
 
-
-function send(action,contentType,content){
-    var returnResult;
+function send(action,content){
     sendMesssageToContentScript({
         action:action,
-        contentType:contentType,
         content:content
     },function(response){
-        returnResult = response;
+        if(action == "init"){
+            initLevel(response);
+        }else{
+            dealResponse(response);
+        }
+        
     });
-    document.writeln(returnResult);
-    return returnResult;
 }
+
+function initLevel(response){
+    response = JSON.parse(response);
+    var level = document.getElementById("level");
+    var iframesLength = response.returnContent.iframesLength;
+    var framesLength = response.returnContent.framesLength;
+    var option = document.createElement("option");
+    option.onmouseover = optionMouseOver("top");
+    option.onmouseout = optionMouseOut("top");
+    option.value = "top";
+    option.innerText = "top";
+    level.appendChild(option);
+    for(var i = 0; i < iframesLength; i ++){
+        option = document.createElement("option");
+        option.onmouseover = optionMouseOver("iframe_"+i);
+        option.onmouseout = optionMouseOut("iframe_"+i);
+        option.value = "iframe_"+i;
+        option.innerText = "iframe_"+i;
+        level.appendChild(option);
+    }
+    for(var i = 0; i < framesLength; i ++){
+        option = document.createElement("option");
+        option.onmouseover = optionMouseOver("frame_"+i);
+        option.onmouseout = optionMouseOut("frame_"+i);
+        option.value = "frame_"+i;
+        option.innerText = "frame_"+i;
+        level.appendChild(option);
+    }
+}
+
+function dealResponse(response){
+    console.log(response);
+}
+
+function optionMouseOver(frame){
+    console.log(frame);
+    send("mouseOver",frame);
+}
+
+function optionMouseOut(frame){
+    send("mouseOut",frame);
+}
+
 
 function sendMesssageToContentScript(message,callback){
     chrome.tabs.query({active:true,currentWindow:true},function(tabs){
@@ -29,4 +69,5 @@ function sendMesssageToContentScript(message,callback){
         });
     });
 }
+
 
