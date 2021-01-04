@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded",function(){
     document.getElementById("level").onchange = function(){
        return optionChange(this.value);
     }
+    document.getElementById("file").onchange = function(){
+        return fileChange(this);
+    }
+    document.getElementById("valid").onclick = function(){
+        return fileValid();
+    }
 });
 
 function send(action,content){
@@ -42,14 +48,40 @@ function initLevel(response){
     }
 }
 
-function dealResponse(response){
-    console.log(response);
-}
-
 function optionChange(frame){
     send("change",frame); 
 }
 
+function fileChange(fileObject){
+    if(fileObject.files.length != 0){
+        document.getElementById("operateFile").style.display = "table-row";
+    }else{
+        document.getElementById("operateFile").style.display = "none";
+    }
+}
+
+function fileValid(){
+    var file = document.getElementById("file")[0];
+    //将文件大小设置在300KB
+    if(file.size > 300*1024){
+        //TODO  文件大小超限
+        return false;
+    }
+
+    var arrTemp = file.name.split(".");
+    var fileType = arrTemp[arrTemp.length - 1];
+    if(fileType = "txt"){
+        return fileValidText(file);
+    }else{
+        //TODO  文件类型不支持
+        document.getElementById("result").innerHTML = "<span>."+fileType+"文件类型暂不支持</span>"
+        return false;
+    }
+}
+
+function dealResponse(response){
+    console.log(response);
+}
 
 function sendMesssageToContentScript(message,callback){
     chrome.tabs.query({active:true,currentWindow:true},function(tabs){

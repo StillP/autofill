@@ -5,31 +5,29 @@
     <title>autofill自动填充</title>
 </head>
 <body>
-    <table>
+    <table style="width: 300px;">
         <caption>自动填充页面</caption>
         <tr>
-            <td>层级：</td>
-            <td><div>
+            <td>页面层级：</td>
+            <td style="width: 200px;"><div>
                 <select id="level">
                 </select>
             </div></td>
         </tr>
         <tr>
-            <td>文件：</td>
-            <td id="file"></td>
+            <td>导入文件：</td>
+            <td><input type="file" id="file" style="width: 100%;"></td>
         </tr>
-        <tr>
-            <td><input type="button" value="校验文件"></td>
-            <td><input type="button" value="导入文件"></td>
+        <tr style="display: none;" id="operateFile">
+            <td><input type="button" value="校验文件" id="valid"></td>
+            <td><input type="button" value="导入文件" id="fill"></td>
         </tr>
         <tr>
             <td>处理结果：</td>
             <td id="result"></td>
         </tr>
-        <tr style="display: none;">
-            <td><span id="eventcount">0</span></td>
-        </tr>
     </table>
 </body>
 <script type="text/javascript" src="../js/popup.js"></script>
+<script type="text/javascript" src="../js/fileText.js"></script>
 </html>

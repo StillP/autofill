@@ -3,13 +3,7 @@ var iframes = document.getElementsByTagName("iframe");
 var frames  = document.getElementsByTagName("frame");
 var frameLen = frames.length;
 var iframeLen = iframes.length;
-
 var documentColor;
-// var returnObject;
-// var returnCode;
-// var returnInformation;
-// var returnContent;
-
 function responseInit(){
     var returnCode = "S001";
     var returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
