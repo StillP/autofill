@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded",function(){
-    window.onload = send("init","");
+    send("init","");
+    document.getElementById("level").onchange = function(){
+       return optionChange(this.value);
+    }
 });
 
 function send(action,content){
@@ -22,23 +25,17 @@ function initLevel(response){
     var iframesLength = response.returnContent.iframesLength;
     var framesLength = response.returnContent.framesLength;
     var option = document.createElement("option");
-    option.onmouseover = optionMouseOver("top");
-    option.onmouseout = optionMouseOut("top");
     option.value = "top";
     option.innerText = "top";
     level.appendChild(option);
     for(var i = 0; i < iframesLength; i ++){
         option = document.createElement("option");
-        option.onmouseover = optionMouseOver("iframe_"+i);
-        option.onmouseout = optionMouseOut("iframe_"+i);
         option.value = "iframe_"+i;
         option.innerText = "iframe_"+i;
         level.appendChild(option);
     }
     for(var i = 0; i < framesLength; i ++){
         option = document.createElement("option");
-        option.onmouseover = optionMouseOver("frame_"+i);
-        option.onmouseout = optionMouseOut("frame_"+i);
         option.value = "frame_"+i;
         option.innerText = "frame_"+i;
         level.appendChild(option);
@@ -49,13 +46,8 @@ function dealResponse(response){
     console.log(response);
 }
 
-function optionMouseOver(frame){
-    console.log(frame);
-    send("mouseOver",frame);
-}
-
-function optionMouseOut(frame){
-    send("mouseOut",frame);
+function optionChange(frame){
+    send("change",frame); 
 }
 
 

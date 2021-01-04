@@ -16,17 +16,23 @@ function responseInit(){
     return "{\"returnCode\":\""+returnCode+"\",\"returnContent\":"+returnContent+"}";
 }
 
-function responseMouseOver(frame){
+function responseChange(frame){
     if(frame == "top"){
         documentColor = document.body.style.backgroundColor;
         document.body.style.backgroundColor = "green";
-    }
-    return "";
-}
-
-function responseMouseOut(frame){
-    if(frame == "top"){
-        document.body.style.backgroundColor = documentColor;
+        setTimeout("document.body.style.backgroundColor = documentColor",200);
+    }else{
+        arrFrame = frame.split("_");
+        console.log(arrFrame[0]);
+        if(arrFrame[0] == "frame"){
+            documentColor = frames[parseInt(arrFrame[1])].style.background;
+            frames[parseInt(arrFrame[1])].style.background = "green";
+            setTimeout("frames[parseInt(arrFrame[1])].style.background = documentColor",200);
+        }else{
+            documentColor = iframes[parseInt(arrFrame[1])].style.background;
+            iframes[parseInt(arrFrame[1])].style.background = "green";
+            setTimeout("iframes[parseInt(arrFrame[1])].style.background = documentColor",200);
+        }
     }
     return "";
 }
@@ -37,12 +43,8 @@ chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
             result = responseInit();
             sendResponse(result);
             break;
-        case "mouseOver":
-            request = responseMouseOver(request.content);
-            sendResponse(result);
-            break;
-        case "mouseOut":
-            result = responseMouseOut(request.content);
+        case "change":
+            request = responseChange(request.content);
             sendResponse(result);
             break;
         default:
