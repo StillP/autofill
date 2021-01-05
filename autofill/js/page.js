@@ -4,6 +4,7 @@ var frames  = document.getElementsByTagName("frame");
 var frameLen = frames.length;
 var iframeLen = iframes.length;
 var documentColor;
+var domCurrent;
 function responseInit(){
     var returnCode = "S001";
     var returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
@@ -12,23 +13,58 @@ function responseInit(){
 
 function responseChange(frame){
     if(frame == "top"){
-        documentColor = document.body.style.backgroundColor;
-        document.body.style.backgroundColor = "green";
-        setTimeout("document.body.style.backgroundColor = documentColor",200);
+        domCurrent = document;
     }else{
         arrFrame = frame.split("_");
-        console.log(arrFrame[0]);
         if(arrFrame[0] == "frame"){
-            documentColor = frames[parseInt(arrFrame[1])].style.background;
-            frames[parseInt(arrFrame[1])].style.background = "green";
-            setTimeout("frames[parseInt(arrFrame[1])].style.background = documentColor",200);
+            try{
+                domCurrent = frames[parseInt(arrFrame[1])].contentWindow.document;
+            }catch(error){
+                console.log(error);
+                //TODO frame跨域问题
+            }
         }else{
-            documentColor = iframes[parseInt(arrFrame[1])].style.background;
-            iframes[parseInt(arrFrame[1])].style.background = "green";
-            setTimeout("iframes[parseInt(arrFrame[1])].style.background = documentColor",200);
+            try{
+                domCurrent = iframes[parseInt(arrFrame[1])].contentWindow.document;
+            }catch(error){
+                console.log(error);
+                //TODO iframe跨域问题
+            }
         }
+        documentColor = domCurrent.body.style.backgroundColor;
+        domCurrent.body.style.backgroundColor = "green";
+        setTimeout("domCurrent.body.style.backgroundColor = documentColor",200);
     }
     return "";
+}
+
+function responseValid(content){
+    var seekElement;
+    var elementType;
+    var elementOptions;
+    var seekType = content.seekType;
+    var elementName = content.elementName;
+    if(seekType == "id"){
+        seekElement = domCurrent.getElementById(elementName);
+        if(seekElement){
+            if(seekElement.tagName == "INPUT"){
+                switch(seekElement.type){
+                    case "password":
+                        elementType = "text";
+                        break;
+                    case "text":
+                    case "radio":
+                    case "checkbox":
+                        elementType = seekElement.type;
+                        break;
+                    default:
+                        elementType = "unknown"
+                }
+            }else if(seekElement.tagName == "SELECT"){
+                elementType = "select";
+            }
+        }
+    }
 }
 
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
@@ -39,6 +75,10 @@ chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
             break;
         case "change":
             request = responseChange(request.content);
+            sendResponse(result);
+            break;
+        case "valid":
+            result = responseValid(request.content);
             sendResponse(result);
             break;
         default:
