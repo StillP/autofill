@@ -47,7 +47,7 @@ function validTextFormat(contentArray){
         //第二列校验
         if(arrItem[1] && arrItem[1].trim() != ""){
             seekResult = send("valid",{"seekType":arrItem[0],"elementName":arrItem[1]});
-            if(seekResult.found == "NO"){
+            if(!seekResult.found){
                 //TODO 未找到对应元素
                 return false;
             }

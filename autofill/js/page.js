@@ -8,7 +8,7 @@ var domCurrent;
 function responseInit(){
     var returnCode = "S001";
     var returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
-    return "{\"returnCode\":\""+returnCode+"\",\"returnContent\":"+returnContent+"}";
+    return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
 }
 
 function responseChange(frame){
@@ -41,30 +41,50 @@ function responseChange(frame){
 function responseValid(content){
     var seekElement;
     var elementType;
+    var elementFound;
     var elementOptions;
     var seekType = content.seekType;
     var elementName = content.elementName;
     if(seekType == "id"){
         seekElement = domCurrent.getElementById(elementName);
         if(seekElement){
+            elementFound = true;
             if(seekElement.tagName == "INPUT"){
-                switch(seekElement.type){
-                    case "password":
-                        elementType = "text";
-                        break;
-                    case "text":
-                    case "radio":
-                    case "checkbox":
-                        elementType = seekElement.type;
-                        break;
-                    default:
-                        elementType = "unknown"
-                }
+                elementType = "text";
+                elementOptions = {"text":"text"};
             }else if(seekElement.tagName == "SELECT"){
                 elementType = "select";
+
+            }else{
+                elementType = "unknown";
+                elementOptions = {"error":"unknown"};
+            }
+        }else{
+            elementFound = false;
+            elementType = "unknown";
+            elementOptions = {"error":"unknown"};
+        }
+    }else if(seekType == "name"){
+        seekElement = domCurrent.getElementsByName(elementName);
+        if(seekElement.length > 0){
+            elementFound = true;
+            if(seekElement[0] && seekElement[0].type == "radio"){
+                elementType = "radio";
+
+            }else if(seekElement[0] && seekElement[0].type == "checkbox"){
+                elementType = "checkbox";
+
+            }else{
+                elementType = "unknown";
+                elementOptions = {"error":"unknown"};
             }
         }
+    }else{
+        elementFound = false;
+        elementType = "unknown";
+        elementOptions = {"error":"unknown"};
     }
+    return `{"found":"${elementFound}","type":"${elementType}","options":"${elementOptions}"}`
 }
 
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
