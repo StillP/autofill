@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded",function(){
     document.getElementById("file").onchange = function(){
         return fileChange(this);
     }
-    document.getElementById("valid").onclick = function(){
-        return fileValid();
+    document.getElementById("fill").onclick = function(){
+        return fileFill();
     }
 });
 
@@ -60,18 +60,17 @@ function fileChange(fileObject){
     }
 }
 
-function fileValid(){
+function fileFill(){
     var file = document.getElementById("file")[0];
     //将文件大小设置在300KB
     if(file.size > 300*1024){
         //TODO  文件大小超限
         return false;
     }
-
     var arrTemp = file.name.split(".");
     var fileType = arrTemp[arrTemp.length - 1];
     if(fileType = "txt"){
-        return fileValidText(file);
+        return fileFillText(file);
     }else{
         //TODO  文件类型不支持
         document.getElementById("result").innerHTML = "<span>."+fileType+"文件类型暂不支持</span>"

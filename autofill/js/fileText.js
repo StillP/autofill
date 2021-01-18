@@ -1,13 +1,10 @@
 //txt文件格式验证
+/* 
+    name/id     content
+*/
 
-var itemOne   = ["id","name","others"];
-var itemTwo;
-var itemThree = ["text","select","radio","checkbox","others"];
-var itemFour  = ["text","value","others"];
-var itemFive;
-
-
-function fileValidText(file){
+function fileFillText(file){
+    var fileFillResult = false;
     var read = new FileReader();
     read.readAsText(file,'text/plain;charset=UTF-8');
     read.onload = function(event){
@@ -18,7 +15,7 @@ function fileValidText(file){
                 contentArray.splice(index,1);
             }
         });
-        validTextFormat(contentArray);
+        fileFillResult = fillContent(contentArray);
     }
     read.onerror = function(){
         //TODO 文件读取异常
@@ -28,57 +25,19 @@ function fileValidText(file){
     }
 }
 
-function validTextFormat(contentArray){
-    var seekResult;
+function fillContent(contentArray){
+    var fillResult = false;
     for(var i = 0; i < contentArray.length; i ++){
         arrItem = contentArray[i].trim().split(/\s+/);
-        //每行元素共有5至6列
-        if(arrItem.length > 6 || arrItem < 5){
-            //TODO 总列数数目不对
-            return false;
-        }
         //第一列校验
-        if(arrItem[0] && itemOne.indexOf(arrItem[0].trim()) != -1){
-            console.log("第一列校验通过")
-        }else{
-            //TODO 第一列校验失败
+        if(!arrItem[0] || arrItem[0].trim() == ""){
             return false;
         }
         //第二列校验
-        if(arrItem[1] && arrItem[1].trim() != ""){
-            seekResult = send("valid",{"seekType":arrItem[0],"elementName":arrItem[1]});
-            if(!seekResult.found){
-                //TODO 未找到对应元素
-                return false;
-            }
-        }else{
-            //TODO 第二列校验失败
+        if(!arrItem[1] || arrItem[1].trim() == ""){
             return false;
         }
-        //第三列校验
-        if(arrItem[2] && itemThree.indexOf(arrItem[2].trim()) != -1){
-            //根据第二列所寻元素类型进行比较
-        }else{
-            //TODO 第三列校验失败
-            return false;
-        }
-        //第四列校验
-        if(arrItem[3] && itemFour.indexOf(arrItem[3].trim()) != -1){
-            //TODO 按照约束条件进行进一步校验
-        }else{
-            //TODO 第四列校验失败
-            return false;
-        }
-        if(arrItem[4] && arrItem[1].trim() != ""){
-            //TODO 根据约束做进一步校验
-        }else{
-            //TODO 第五列校验失败
-            return false;
-        }
+        fillResult = send("fill",{"element":arrItem[0],"fillText":arrItem[1]});
     }
-}
-
-function seekElement(type,name){
-    var content = {"seekType":type,"elementName":name};
-    return send("valid",content);
+    return fillResult;
 }
