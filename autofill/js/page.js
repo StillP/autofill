@@ -39,9 +39,27 @@ function responseChange(frame){
 }
 
 function responseValid(content){
+    var result = "";
     var element = content.element;
     var fillText = content.fillText;
-    var fillnode = domCurrent
+    var nodeById = domCurrent.getElementById(element);
+    var nodeByName = domCurrent.getElementsByName(element);
+    //处理id与name同名问题
+    if(!nodeById){
+        fillById(nodeById,fillText);
+    }
+    if(nodeByName.length > 0){
+        fillByName(nodeByName,fillText);
+    }
+    return result;
+}
+
+function fillById(node,content){
+    //TODO
+}
+
+function fillByName(nodes,content){
+    //TODO
 }
 
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){

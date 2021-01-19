@@ -29,11 +29,9 @@ function fillContent(contentArray){
     var fillResult = false;
     for(var i = 0; i < contentArray.length; i ++){
         arrItem = contentArray[i].trim().split(/\s+/);
-        //第一列校验
         if(!arrItem[0] || arrItem[0].trim() == ""){
             return false;
         }
-        //第二列校验
         if(!arrItem[1] || arrItem[1].trim() == ""){
             return false;
         }
