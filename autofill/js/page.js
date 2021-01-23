@@ -44,22 +44,55 @@ function responseValid(content){
     var fillText = content.fillText;
     var nodeById = domCurrent.getElementById(element);
     var nodeByName = domCurrent.getElementsByName(element);
-    //处理id与name同名问题
-    if(!nodeById){
-        fillById(nodeById,fillText);
+    //按id可以找到
+    if(nodeById){
+        //INPUT text
+        if(nodeById.tagName == "INPUT" && nodeById.type.toUpperCase() == "TEXT"){
+            nodeById.value = fillText;
+            return element+"文本元素已填充";
+        }
+        //SELECT option
+        if(nodeById.tagName == "SELECT"){
+            var options = nodeById.children;
+            for(option in options){
+                if(option.tagName == "OPTION" && option.innerText == fillText){
+                    option.setAttribute("checked",true)
+                    result = element+"下拉元素已填充";
+                }
+            }
+            if(result == ""){
+                result = element+"下拉元素未匹配";
+            }
+            return result;
+        }
     }
-    if(nodeByName.length > 0){
-        fillByName(nodeByName,fillText);
+    //按name没有找到
+    if(nodeByName.length < 1){
+        return element+"元素未找到";
     }
+    //INPUT radio
+    if(nodeByName[0].tagName == "INPUT" && nodeById.type.toUpperCase() == "RADIO"){
+       //TODO
+    }
+    if(nodeByName[0].tagName == "INPUT" && nodeById.type.toUpperCase() == "CHECKBOX"){
+        //TODO
+    }
+    //SELECT
+    if(nodeByName[0].tagName == "SELECT"){
+        var options = nodeById.children;
+        for(option in options){
+            if(option.tagName == "OPTION" && option.innerText == fillText){
+                option.setAttribute("checked",true)
+                result = element+"下拉元素已填充";
+            }
+        }
+        if(result == ""){
+            result = element+"下拉元素未匹配";
+        }
+        return result;
+    }
+    
     return result;
-}
-
-function fillById(node,content){
-    //TODO
-}
-
-function fillByName(nodes,content){
-    //TODO
 }
 
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
