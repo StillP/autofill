@@ -71,11 +71,32 @@ function responseValid(content){
         return element+"元素未找到";
     }
     //INPUT radio
-    if(nodeByName[0].tagName == "INPUT" && nodeById.type.toUpperCase() == "RADIO"){
-       //TODO
+    // 只支持按value选址，这块不太好
+    if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "RADIO"){
+       for(radio in nodeByName){
+           if(radio.value == fillText){
+               radio.setAttribute("checked","true");
+               result = element+"单选元素已填充";
+           }
+       }
+       if(result == ""){
+            result = element+"单选元素未匹配";
+        }
+        return result;
     }
-    if(nodeByName[0].tagName == "INPUT" && nodeById.type.toUpperCase() == "CHECKBOX"){
+    if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "CHECKBOX"){
         //TODO
+        fillTexts = fillText.split(",");
+        for(radio in nodeByName){
+            if(fillTexts.indexOf(radio.value) != -1){
+                radio.setAttribute("checked","true");
+                result = element+"单选元素已填充";
+            }
+        }
+        if(result == ""){
+             result = element+"单选元素未匹配";
+         }
+         return result;
     }
     //SELECT
     if(nodeByName[0].tagName == "SELECT"){
