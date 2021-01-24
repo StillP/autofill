@@ -70,6 +70,10 @@ function responseValid(content){
     if(nodeByName.length < 1){
         return element+"元素未找到";
     }
+    if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "TEXT"){
+        nodeByName[0].value = fillText;
+        return element+"文本元素已填充";
+    }
     //INPUT radio
     // 只支持按value选址，这块不太好
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "RADIO"){
