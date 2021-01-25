@@ -5,9 +5,12 @@ var frameLen = frames.length;
 var iframeLen = iframes.length;
 var documentColor;
 var domCurrent;
+var returnCode;
+var returnContent
+
 function responseInit(){
-    var returnCode = "S001";
-    var returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
+    returnCode = "S000";
+    returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
     return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
 }
 
@@ -19,27 +22,35 @@ function responseChange(frame){
         if(arrFrame[0] == "frame"){
             try{
                 domCurrent = frames[parseInt(arrFrame[1])].contentWindow.document;
+                documentColor = domCurrent.body.style.backgroundColor;
+                domCurrent.body.style.backgroundColor = "green";
+                setTimeout("domCurrent.body.style.backgroundColor = documentColor",200);
+                returnCode = "S000";
+                returnContent = "此frame支持填充";
             }catch(error){
                 console.log(error);
-                //TODO frame跨域问题
+                returnCode = "E002";
+                returnContent = "此frame链接跨域，无法填充"
             }
         }else{
             try{
                 domCurrent = iframes[parseInt(arrFrame[1])].contentWindow.document;
+                documentColor = domCurrent.body.style.backgroundColor;
+                domCurrent.body.style.backgroundColor = "green";
+                setTimeout("domCurrent.body.style.backgroundColor = documentColor",200);
+                returnCode = "S000";
+                returnContent = "此iframe支持填充";
             }catch(error){
                 console.log(error);
-                //TODO iframe跨域问题
+                returnCode = "E003";
+                returnContent = "此iframe链接跨域，无法填充"
             }
         }
-        documentColor = domCurrent.body.style.backgroundColor;
-        domCurrent.body.style.backgroundColor = "green";
-        setTimeout("domCurrent.body.style.backgroundColor = documentColor",200);
     }
-    return "";
+    return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
 }
 
-function responseValid(content){
-    var result = "";
+function responseFill(content){
     var element = content.element;
     var fillText = content.fillText;
     var nodeById = domCurrent.getElementById(element);
@@ -49,7 +60,8 @@ function responseValid(content){
         //INPUT text
         if(nodeById.tagName == "INPUT" && nodeById.type.toUpperCase() == "TEXT"){
             nodeById.value = fillText;
-            return element+"文本元素已填充";
+            returnCode = "S000";
+            returnContent = `${element}文本元素填充成功`;
         }
         //SELECT option
         if(nodeById.tagName == "SELECT"){
@@ -57,17 +69,21 @@ function responseValid(content){
             for(option in options){
                 if(option.tagName == "OPTION" && option.innerText == fillText){
                     option.setAttribute("checked",true)
-                    result = element+"下拉元素已填充";
+                    returnCode = "S000";
+                    returnContent = `${element}下拉元素勾选成功`;
                 }
             }
-            if(result == ""){
-                result = element+"下拉元素未匹配";
+            if(returnCode == ""){
+                returnCode = "W004"
+                returnContent = `${element}下拉元素无匹配项`;
             }
-            return result;
         }
+        return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
     }
     //按name没有找到
     if(nodeByName.length < 1){
+        returnCode = "W003"
+
         return element+"元素未找到";
     }
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "TEXT"){

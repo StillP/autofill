@@ -86,8 +86,8 @@ function sendMesssageToContentScript(message,callback){
     chrome.tabs.query({active:true,currentWindow:true},function(tabs){
         chrome.tabs.sendMessage(tabs[0].id,message,function(response){
             if(chrome.runtime.lastError){
-                //通信异常
-                document.writeln(chrome.runtime.lastError.message);
+                //TODO:E001
+                //document.writeln(chrome.runtime.lastError.message);
             }else if(callback) callback(response);
         });
     });
