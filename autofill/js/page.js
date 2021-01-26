@@ -70,7 +70,7 @@ function responseFill(content){
                 if(option.tagName == "OPTION" && option.innerText == fillText){
                     option.setAttribute("checked",true)
                     returnCode = "S000";
-                    returnContent = `${element}下拉元素勾选成功`;
+                    returnContent = `${element}下拉元素已选中`;
                 }
             }
             if(returnCode == ""){
@@ -78,17 +78,19 @@ function responseFill(content){
                 returnContent = `${element}下拉元素无匹配项`;
             }
         }
-        return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
+        return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
     //按name没有找到
     if(nodeByName.length < 1){
         returnCode = "W003"
-
-        return element+"元素未找到";
+        returnContent = `${element}元素未找到`;
+        return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "TEXT"){
         nodeByName[0].value = fillText;
-        return element+"文本元素已填充";
+        returnCode = "S000";
+        returnContent = `${element}文本元素已填充`;
+        return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
     //INPUT radio
     // 只支持按value选址，这块不太好
@@ -96,13 +98,15 @@ function responseFill(content){
        for(radio in nodeByName){
            if(radio.value == fillText){
                radio.setAttribute("checked","true");
-               result = element+"单选元素已填充";
+               returnCode = "S000";
+               returnContent = `${element}单选元素已勾选`;
            }
        }
        if(result == ""){
-            result = element+"单选元素未匹配";
+            returnCode = "W004";
+            returnContent = `${element}单选元素无匹配项`
         }
-        return result;
+        return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "CHECKBOX"){
         //TODO
@@ -110,13 +114,15 @@ function responseFill(content){
         for(radio in nodeByName){
             if(fillTexts.indexOf(radio.value) != -1){
                 radio.setAttribute("checked","true");
-                result = element+"单选元素已填充";
+                returnCode = "S000";
+                returnContent = `${element}多选元素已勾选`;
             }
         }
         if(result == ""){
-             result = element+"单选元素未匹配";
-         }
-         return result;
+            returnCode = "W004";
+            returnContent = `${element}多选元素无匹配项`
+        }
+         return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
     //SELECT
     if(nodeByName[0].tagName == "SELECT"){
@@ -124,16 +130,17 @@ function responseFill(content){
         for(option in options){
             if(option.tagName == "OPTION" && option.innerText == fillText){
                 option.setAttribute("checked",true)
-                result = element+"下拉元素已填充";
+                returnCode = "S000";
+                returnContent = `${element}下拉元素已选中`;
             }
         }
         if(result == ""){
-            result = element+"下拉元素未匹配";
+            returnCode = "W004"
+            returnContent = `${element}下拉元素无匹配项`;
         }
-        return result;
+        return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
-    
-    return result;
+    return `{"returnCode":"W003","returnContent":"未找到对应元素"}`;
 }
 
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
