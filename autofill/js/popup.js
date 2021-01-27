@@ -18,6 +18,8 @@ function send(action,content){
     },function(response){
         if(action == "init"){
             initLevel(response);
+        }else if(action == "fill"){
+            dealResult(response);
         }else{
             dealResponse(response);
         }
@@ -48,6 +50,13 @@ function initLevel(response){
     }
 }
 
+function dealResult(response){
+    response = JSON.parse(response);
+    var returnCode = response.returnCode;
+    var returnContent = response.returnContent;
+    
+}
+
 function optionChange(frame){
     send("change",frame); 
 }
@@ -69,7 +78,7 @@ function fileFill(){
     }
     var arrTemp = file.name.split(".");
     var fileType = arrTemp[arrTemp.length - 1];
-    if(fileType = "txt"){
+    if(fileType.toUpperCase() == "TXT"){
         return fileFillText(file);
     }else{
         //TODO  文件类型不支持
