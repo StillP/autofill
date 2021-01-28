@@ -19,7 +19,8 @@ function send(action,content){
         if(action == "init"){
             initLevel(response);
         }else if(action == "fill"){
-            dealResult(response);
+            response = JSON.parse(response);
+            dealResult(response.returnCode,response.returnContent);
         }else{
             dealResponse(response);
         }
@@ -50,11 +51,26 @@ function initLevel(response){
     }
 }
 
-function dealResult(response){
-    response = JSON.parse(response);
-    var returnCode = response.returnCode;
-    var returnContent = response.returnContent;
-    
+function dealResult(returnCode,returnContent){
+    // console.log(`${returnCode} : ${returnContent}`)
+    var result;
+    if(returnCode.indexOf("E") != -1){
+        result = document.createElement("span");
+        result.innerText = returnContent;
+        result.style.color = "yellow";
+        document.getElementById("result").appendChild(result);
+    }
+    if(returnCode.indexOf("W") != -1){
+        result = document.createElement("span");
+        result.innerText = returnContent;
+        result.style.color = "yellow";
+        document.getElementById("result").appendChild(result);
+    }
+    if(returnCode.indexOf("S") != -1){
+        result = document.createElement("span");
+        result.innerText = returnContent;
+        document.getElementById("result").appendChild(result);
+    }
 }
 
 function optionChange(frame){
@@ -70,20 +86,26 @@ function fileChange(fileObject){
 }
 
 function fileFill(){
-    var file = document.getElementById("file")[0];
+    //清空原有内容
+    var result = document.getElementById("result");
+    var children = result.children;
+    for (var i = children.length - 1; i >= 0; i--) {
+        result.removeChild(children[i]);
+    }
+
+    var file = document.getElementById("file").files[0];
     //将文件大小设置在300KB
     if(file.size > 300*1024){
-        //TODO  文件大小超限
-        return false;
+        //文件大小超限
+        return dealResult("W001","文件大小超限");
     }
     var arrTemp = file.name.split(".");
     var fileType = arrTemp[arrTemp.length - 1];
     if(fileType.toUpperCase() == "TXT"){
-        return fileFillText(file);
+        fileFillText(file);
     }else{
-        //TODO  文件类型不支持
-        document.getElementById("result").innerHTML = "<span>."+fileType+"文件类型暂不支持</span>"
-        return false;
+        //文件类型不支持
+        dealResult("W002","文件类型暂不支持")
     }
 }
 
@@ -95,8 +117,8 @@ function sendMesssageToContentScript(message,callback){
     chrome.tabs.query({active:true,currentWindow:true},function(tabs){
         chrome.tabs.sendMessage(tabs[0].id,message,function(response){
             if(chrome.runtime.lastError){
-                //TODO:E001
-                //document.writeln(chrome.runtime.lastError.message);
+                dealResult("E001","前后台通讯异常")
+                console.log(chrome.runtime.lastError.message);
             }else if(callback) callback(response);
         });
     });
