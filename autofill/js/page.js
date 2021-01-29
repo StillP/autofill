@@ -11,7 +11,7 @@ domCurrent = document;
 
 function responseInit(){
     returnCode = "S000";
-    returnContent = "{\"framesLength\":\""+frameLen+"\",\"iframesLength\":\""+iframeLen+"\"}";
+    returnContent = `{"framesLength":"${frameLen}","iframesLength":"${iframeLen}"}`;
     return `{"returnCode":"${returnCode}","returnContent":${returnContent}}`;
 }
 
