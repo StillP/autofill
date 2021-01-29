@@ -68,11 +68,21 @@ function responseFill(content){
         //SELECT option
         if(nodeById.tagName == "SELECT"){
             var options = nodeById.children;
+            //调整为先value后text
             for(var i = 0; i < options.length; i ++){
-                if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+                if(options[i].tagName == "OPTION" && options[i].value == fillText){
                     nodeByName[0].options[i].selected = true;
                     returnCode = "S000";
                     returnContent = `${element}下拉元素已选中`;
+                }
+            }
+            if(returnCode == ""){
+                for(var i = 0; i < options.length; i ++){
+                    if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+                        nodeByName[0].options[i].selected = true;
+                        returnCode = "S000";
+                        returnContent = `${element}下拉元素已选中`;
+                    }
                 }
             }
             if(returnCode == ""){
@@ -129,11 +139,21 @@ function responseFill(content){
     //SELECT
     if(nodeByName[0].tagName == "SELECT"){
         var options = nodeByName[0].children;
+        //调整为先value后text
         for(var i = 0; i < options.length; i ++){
-            if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+            if(options[i].tagName == "OPTION" && options[i].value == fillText){
                 nodeByName[0].options[i].selected = true;
                 returnCode = "S000";
                 returnContent = `${element}下拉元素已选中`;
+            }
+        }
+        if(returnCode == ""){
+            for(var i = 0; i < options.length; i ++){
+                if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+                    nodeByName[0].options[i].selected = true;
+                    returnCode = "S000";
+                    returnContent = `${element}下拉元素已选中`;
+                }
             }
         }
         if(result == ""){
