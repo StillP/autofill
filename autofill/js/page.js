@@ -7,6 +7,7 @@ var documentColor;
 var domCurrent;
 var returnCode;
 var returnContent
+domCurrent = document;
 
 function responseInit(){
     returnCode = "S000";
@@ -55,6 +56,7 @@ function responseFill(content){
     var fillText = content.fillText;
     var nodeById = domCurrent.getElementById(element);
     var nodeByName = domCurrent.getElementsByName(element);
+    returnCode = "";
     //按id可以找到
     if(nodeById){
         //INPUT text
@@ -66,9 +68,9 @@ function responseFill(content){
         //SELECT option
         if(nodeById.tagName == "SELECT"){
             var options = nodeById.children;
-            for(option in options){
-                if(option.tagName == "OPTION" && option.innerText == fillText){
-                    option.setAttribute("checked",true)
+            for(var i = 0; i < options.length; i ++){
+                if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+                    nodeByName[0].options[i].selected = true;
                     returnCode = "S000";
                     returnContent = `${element}下拉元素已选中`;
                 }
@@ -95,14 +97,14 @@ function responseFill(content){
     //INPUT radio
     // 只支持按value选址，这块不太好
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "RADIO"){
-       for(radio in nodeByName){
-           if(radio.value == fillText){
-               radio.setAttribute("checked","true");
-               returnCode = "S000";
-               returnContent = `${element}单选元素已勾选`;
-           }
-       }
-       if(result == ""){
+        for(var i = 0; i < nodeByName.length; i ++){
+            if(nodeByName[i].value == fillText){
+                nodeByName[i].setAttribute("checked","true");
+                returnCode = "S000";
+                returnContent = `${element}单选元素已勾选`;
+            }
+        }
+        if(result == ""){
             returnCode = "W004";
             returnContent = `${element}单选元素无匹配项`
         }
@@ -111,9 +113,9 @@ function responseFill(content){
     if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "CHECKBOX"){
         //TODO
         fillTexts = fillText.split(",");
-        for(radio in nodeByName){
-            if(fillTexts.indexOf(radio.value) != -1){
-                radio.setAttribute("checked","true");
+        for(var i = 0; i < nodeByName.length; i ++){
+            if(fillTexts.indexOf(nodeByName[i].value) != -1){
+                nodeByName[i].setAttribute("checked","true");
                 returnCode = "S000";
                 returnContent = `${element}多选元素已勾选`;
             }
@@ -126,10 +128,10 @@ function responseFill(content){
     }
     //SELECT
     if(nodeByName[0].tagName == "SELECT"){
-        var options = nodeById.children;
-        for(option in options){
-            if(option.tagName == "OPTION" && option.innerText == fillText){
-                option.setAttribute("checked",true)
+        var options = nodeByName[0].children;
+        for(var i = 0; i < options.length; i ++){
+            if(options[i].tagName == "OPTION" && options[i].innerText == fillText){
+                nodeByName[0].options[i].selected = true;
                 returnCode = "S000";
                 returnContent = `${element}下拉元素已选中`;
             }

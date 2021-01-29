@@ -52,23 +52,20 @@ function initLevel(response){
 }
 
 function dealResult(returnCode,returnContent){
-    // console.log(`${returnCode} : ${returnContent}`)
     var result;
     if(returnCode.indexOf("E") != -1){
-        result = document.createElement("span");
-        result.innerText = returnContent;
-        result.style.color = "yellow";
+        result = document.createElement("div");
+        result.innerHTML = "<img src='../images/error.jpg' alt='error'><span>"+returnContent+"</span>";
         document.getElementById("result").appendChild(result);
     }
     if(returnCode.indexOf("W") != -1){
-        result = document.createElement("span");
-        result.innerText = returnContent;
-        result.style.color = "yellow";
+        result = document.createElement("div");
+        result.innerHTML = "<img src='../images/warn.jpg' alt='warn'><span>"+returnContent+"</span>";
         document.getElementById("result").appendChild(result);
     }
     if(returnCode.indexOf("S") != -1){
-        result = document.createElement("span");
-        result.innerText = returnContent;
+        result = document.createElement("div");
+        result.innerHTML = "<img src='../images/success.jpg' alt='success'><span>"+returnContent+"</span>";
         document.getElementById("result").appendChild(result);
     }
 }
@@ -88,6 +85,7 @@ function fileChange(fileObject){
 function fileFill(){
     //清空原有内容
     var result = document.getElementById("result");
+    document.getElementById("operateFile").style.display = "none";
     var children = result.children;
     for (var i = children.length - 1; i >= 0; i--) {
         result.removeChild(children[i]);

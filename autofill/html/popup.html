@@ -4,8 +4,19 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <title>autofill自动填充</title>
 </head>
+<style>
+    *{
+        margin: 2px;
+        padding: 2px;
+        font-size: 16px;
+    }
+    body{
+        width: 300px;
+    }
+</style>
+
 <body>
-    <table style="width: 300px;">
+    <table>
         <caption>自动填充页面</caption>
         <tr>
             <td>页面层级：</td>
@@ -22,7 +33,7 @@
             <td colspan="2" style="text-align: center;"><input type="button" value="导入文件" id="fill"></td>
         </tr>
         <tr>
-            <td>处理结果：</td>
+            <td style="vertical-align: top;">处理结果：</td>
             <td id="result"></td>
         </tr>
     </table>
