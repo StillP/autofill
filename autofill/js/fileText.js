@@ -5,7 +5,7 @@
 
 function fileFillText(file){
     var read = new FileReader();
-    read.readAsText(file,'text/plain;charset=UTF-8');
+    read.readAsText(file,'text/plain;charset=gb2312');
     read.onload = function(event){
         //成功读取
         contentArray = event.target.result.split(/[(\r\n)\r\n]+/);

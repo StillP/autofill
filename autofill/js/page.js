@@ -52,6 +52,7 @@ function responseChange(frame){
 }
 
 function responseFill(content){
+    console.log(content);
     var element = content.element;
     var fillText = content.fillText;
     var nodeById = domCurrent.getElementById(element);
@@ -60,7 +61,7 @@ function responseFill(content){
     //按id可以找到
     if(nodeById){
         //INPUT text
-        if(nodeById.tagName == "INPUT" && nodeById.type.toUpperCase() == "TEXT"){
+        if(nodeById.tagName == "INPUT" && (nodeById.type.toUpperCase() == "TEXT" || nodeById.type.toUpperCase() == "NUMBER")){
             nodeById.value = fillText;
             returnCode = "S000";
             returnContent = `${element}文本元素填充成功`;
@@ -98,7 +99,7 @@ function responseFill(content){
         returnContent = `${element}元素未找到`;
         return `{"returnCode":"${returnCode}","returnContent":"${returnContent}"}`;
     }
-    if(nodeByName[0].tagName == "INPUT" && nodeByName[0].type.toUpperCase() == "TEXT"){
+    if(nodeByName[0].tagName == "INPUT" && (nodeByName[0].type.toUpperCase() == "TEXT" || nodeByName[0].type.toUpperCase() == "NUMBER")){
         nodeByName[0].value = fillText;
         returnCode = "S000";
         returnContent = `${element}文本元素已填充`;
