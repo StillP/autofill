@@ -1,7 +1,7 @@
 {
     "name":"autofill",
     "description":"文件导入自动填充数据插件",
-    "version":"0.0.2",
+    "version":"0.0.3",
     "manifest_version":2,
     "browser_action":{
         "default_popup":"./html/popup.html",
